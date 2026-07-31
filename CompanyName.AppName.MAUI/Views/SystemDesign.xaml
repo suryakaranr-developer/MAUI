@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:standardButtons="clr-namespace:CompanyName.AppName.Design.MAUI.Components.Buttons.StandardButtons;assembly=CompanyName.AppName.Design.MAUI"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Components;assembly=CompanyName.AppName.Design.MAUI"
+             xmlns:tokens="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens;assembly=CompanyName.AppName.Design.MAUI"
+             xmlns:viewModels="clr-namespace:CompanyName.AppName.Core.ViewModels;assembly=CompanyName.AppName.Core"
+             x:DataType="viewModels:SystemDesignViewModel"
+             x:Class="CompanyName.AppName.MAUI.Views.SystemDesign">
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Padding="24" Spacing="8">
+
+                <tokens:HeadlineSmall Text="Material 3" />
+                <tokens:BodyMedium Text="Components built against the Material Design 3 colour roles, type scale and shape tokens." />
+
+                <material:MaterialCard Variant="Outlined" Padding="0" Margin="0,16,0,24">
+                    <VerticalStackLayout>
+                        <material:MaterialListItem Headline="Colour roles"
+                                                   Supporting="The palette and its content pairings"
+                                                   Command="{Binding ViewMaterialCommand}"
+                                                   CommandParameter="MaterialColorRoles" />
+                        <material:MaterialDivider Inset="16" />
+                        <material:MaterialListItem Headline="Type scale"
+                                                   Supporting="Fifteen styles in five groups"
+                                                   Command="{Binding ViewMaterialCommand}"
+                                                   CommandParameter="MaterialTypeScale" />
+                        <material:MaterialDivider Inset="16" />
+                        <material:MaterialListItem Headline="Buttons"
+                                                   Supporting="Common, floating action, icon and segmented"
+                                                   Command="{Binding ViewMaterialCommand}"
+                                                   CommandParameter="MaterialButtons" />
+                        <material:MaterialDivider Inset="16" />
+                        <material:MaterialListItem Headline="Selection"
+                                                   Supporting="Switch, checkbox, radio and chips"
+                                                   Command="{Binding ViewMaterialCommand}"
+                                                   CommandParameter="MaterialSelection" />
+                        <material:MaterialDivider Inset="16" />
+                        <material:MaterialListItem Headline="Text fields"
+                                                   Supporting="Filled and outlined, with floating labels"
+                                                   Command="{Binding ViewMaterialCommand}"
+                                                   CommandParameter="MaterialTextFields" />
+                        <material:MaterialDivider Inset="16" />
+                        <material:MaterialListItem Headline="Containment"
+                                                   Supporting="Cards, list items, badges and dividers"
+                                                   Command="{Binding ViewMaterialCommand}"
+                                                   CommandParameter="MaterialContainment" />
+                        <material:MaterialDivider Inset="16" />
+                        <material:MaterialListItem Headline="Progress"
+                                                   Supporting="Linear and circular indicators"
+                                                   Command="{Binding ViewMaterialCommand}"
+                                                   CommandParameter="MaterialProgress" />
+                    </VerticalStackLayout>
+                </material:MaterialCard>
+
+                <material:MaterialDivider />
+
+                <tokens:HeadlineSmall Text="Application design system" Margin="0,24,0,0" />
+                <tokens:BodyMedium Text="The existing component set, on its own tokens and typography." />
+
+                <VerticalStackLayout Margin="0,8,0,24">
+                    <standardButtons:PrimaryButton Text="Applications Button" Command="{Binding ViewButtonsCommand}" CommandParameter="DEALER"/>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

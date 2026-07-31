@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="CompanyName.AppName.MAUI.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.FlyoutBehavior="Disabled">
+
+    <!-- Tabs are built in the code-behind so each page can be resolved from the container with its
+         view model injected. A XAML DataTemplate constructs pages with Activator, bypassing DI;
+         the code-behind uses a factory template that goes through the service provider instead.
+         Detail pages are not declared here at all: they are registered as routes and pushed, which
+         is what gives them a back button rather than making each one a top-level destination. -->
+
+</Shell>

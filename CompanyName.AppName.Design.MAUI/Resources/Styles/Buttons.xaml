@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:standardButtons="clr-namespace:CompanyName.AppName.Design.MAUI.Components.Buttons.StandardButtons"
+                    xmlns:iconsButtons="clr-namespace:CompanyName.AppName.Design.MAUI.Components.Buttons.IconsButtons">
+    
+ <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Resources/Styles/Themes/Colors.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- PrimaryButton -->
+    <Style TargetType="standardButtons:PrimaryButton" ApplyToDerivedTypes="True">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryBlue}, Dark={StaticResource PrimaryBlue_Dark}}" />
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="FontFamily" Value="MontserratRegular"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CornerRadius" Value="24"/>
+        <Setter Property="Padding" Value="48,16"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Disabled}, Dark={StaticResource Disabled_Dark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- SecondaryButton -->
+    <Style TargetType="standardButtons:SecondaryButton" ApplyToDerivedTypes="True">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryBlue}, Dark={StaticResource PrimaryBlue_Dark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource Surface_Dark}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource PrimaryBlue}, Dark={StaticResource PrimaryBlue_Dark}}" />
+        <Setter Property="FontFamily" Value="MontserratRegular"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="CornerRadius" Value="24"/>
+        <Setter Property="Padding" Value="48,16"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Disabled}, Dark={StaticResource Disabled_Dark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- TertiaryButton -->
+    <Style TargetType="standardButtons:TertiaryButton" ApplyToDerivedTypes="True">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryBlue}, Dark={StaticResource PrimaryBlue_Dark}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource Surface_Dark}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource Surface_Dark}}" />
+        <Setter Property="FontFamily" Value="MontserratRegular"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="CornerRadius" Value="24"/>
+        <Setter Property="Padding" Value="48,16"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Disabled}, Dark={StaticResource Disabled_Dark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- PrimaryIconButton -->
+    <Style TargetType="iconsButtons:PrimaryIconButton">
+        <Setter Property="CornerRadius" Value="32"/>
+        <Setter Property="HeightRequest" Value="64"/>
+        <Setter Property="WidthRequest" Value="64"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryBlue}, Dark={StaticResource PrimaryBlue_Dark}}"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Disabled}, Dark={StaticResource Disabled_Dark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- SecondaryIconButton -->
+    <Style TargetType="iconsButtons:SecondaryIconButton">
+        <Setter Property="CornerRadius" Value="32"/>
+        <Setter Property="HeightRequest" Value="64"/>
+        <Setter Property="WidthRequest" Value="64"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource Surface_Dark}}"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Disabled}, Dark={StaticResource Disabled_Dark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+</ResourceDictionary>

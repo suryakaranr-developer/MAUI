@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- Plain net9.0, deliberately not a MAUI platform target. Service clients and the contracts
+         they implement live here so they can be built and unit tested against a fake handler
+         without the MAUI workload or a device. HttpClient and System.Text.Json come from the
+         shared framework, so no package reference is needed to call an endpoint. -->
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CompanyName.AppName.Model\CompanyName.AppName.Model.csproj" />
+    </ItemGroup>
+
+</Project>

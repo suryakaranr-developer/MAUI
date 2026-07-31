@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Light Colors -->
+    <Color x:Key="PrimaryBlue">#102b4e</Color>
+    <Color x:Key="PrimaryInfo">#4d4d4d</Color>
+    <Color x:Key="SecondaryInfo">#6e6e6e</Color>
+    <Color x:Key="Disabled">#8c8c8c</Color>
+    <Color x:Key="Divider">#c8c8c8</Color>
+    <Color x:Key="Success">#008200</Color>
+    <Color x:Key="Warning">#da7029</Color>
+    <Color x:Key="WarningText">#ba4e00</Color>
+    <Color x:Key="Error">#d62d0a</Color>
+    <Color x:Key="GradientBlue">#0275eb</Color>
+    <Color x:Key="SecondaryBlue">#0142bd</Color>
+    <Color x:Key="Surface">#f4f4f4</Color>
+    <Color x:Key="Surface80">#ccf4f4f4</Color>
+    <Color x:Key="Surface0">#10f4f4f4</Color>
+    <Color x:Key="SurfaceHighlight">#ffffff</Color>
+    <Color x:Key="SurfaceHighlight80">#ccffffff</Color>
+    <Color x:Key="LightGray">#dfe3e8</Color>
+
+    <!-- Dark Colors -->
+    <Color x:Key="PrimaryBlue_Dark">#0093f0</Color>
+    <Color x:Key="PrimaryInfo_Dark">#f2f2f2</Color>
+    <Color x:Key="SecondaryInfo_Dark">#8c8c8c</Color>
+    <Color x:Key="Disabled_Dark">#6e6e6e</Color>
+    <Color x:Key="Divider_Dark">#4d4d4d</Color>
+    <Color x:Key="Success_Dark">#29a429</Color>
+    <Color x:Key="Warning_Dark">#da7029</Color>
+    <Color x:Key="WarningText_Dark">#da7029</Color>
+    <Color x:Key="Error_Dark">#ff3030</Color>
+    <Color x:Key="GradientBlue_Dark">#0093f0</Color>
+    <Color x:Key="SecondaryBlue_Dark">#0275eb</Color>
+    <Color x:Key="Surface_Dark">#1a1f26</Color>
+    <Color x:Key="Surface80_Dark">#cc1a1f26</Color>
+    <Color x:Key="Surface0_Dark">#101a1f26</Color>
+    <Color x:Key="SurfaceHighlight_Dark">#212830</Color>
+    <Color x:Key="SurfaceHigh_Dark">#212830</Color>
+    <Color x:Key="SurfaceHighlight80_Dark">#cc212830</Color>
+    <Color x:Key="LightGray_Dark">#6e6e6e</Color>
+
+
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="White">#ffffff</Color>
+
+    <!--Module Colors-->
+    <Color x:Key="ConditionsNotCorrect">#FFBF00</Color>
+
+</ResourceDictionary>

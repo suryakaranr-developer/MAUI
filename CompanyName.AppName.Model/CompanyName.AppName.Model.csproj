@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- Plain net9.0 with no project references of its own. Model classes are the shape of the
+         data passed between layers, so everything else is free to depend on this and it depends
+         on nothing, which keeps the reference graph acyclic. -->
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+</Project>

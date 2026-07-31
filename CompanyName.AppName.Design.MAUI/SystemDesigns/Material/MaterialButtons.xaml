@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Components"
+             xmlns:tokens="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens"
+             Title="Buttons"
+             x:Class="CompanyName.AppName.Design.MAUI.SystemDesigns.Material.MaterialButtons">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="8">
+
+            <tokens:HeadlineSmall Text="Common buttons" />
+            <tokens:BodyMedium Text="Five variants, ordered by emphasis. Use one filled button per screen for the action you most want taken." />
+
+            <VerticalStackLayout Spacing="12" Margin="0,12,0,24">
+                <material:MaterialButton Text="Filled" Variant="Filled" />
+                <material:MaterialButton Text="Elevated" Variant="Elevated" />
+                <material:MaterialButton Text="Filled tonal" Variant="FilledTonal" />
+                <material:MaterialButton Text="Outlined" Variant="Outlined" />
+                <material:MaterialButton Text="Text" Variant="Text" />
+                <material:MaterialButton Text="Disabled" Variant="Filled" IsEnabled="False" />
+            </VerticalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Floating action buttons" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="Carries the single most common action on a screen. The extended form adds a label where the icon alone would be ambiguous." />
+
+            <HorizontalStackLayout Spacing="16" Margin="0,12,0,0" VerticalOptions="Center">
+                <material:MaterialFab Size="Small"
+                                      Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialFab Size="Medium"
+                                      Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialFab Size="Large"
+                                      Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Spacing="16" Margin="0,16,0,0">
+                <material:MaterialFab Color="Secondary"
+                                      Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialFab Color="Tertiary"
+                                      Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialFab Color="Surface"
+                                      Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+            </HorizontalStackLayout>
+
+            <material:MaterialFab Text="Compose"
+                                  Margin="0,16,0,24"
+                                  Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Icon buttons" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="A 40dp container keeps the touch target comfortable around a 24dp icon." />
+
+            <HorizontalStackLayout Spacing="16" Margin="0,12,0,0">
+                <material:MaterialIconButton Variant="Standard"
+                                             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialIconButton Variant="Filled"
+                                             Source="right_arrow_white.png" />
+                <material:MaterialIconButton Variant="Tonal"
+                                             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialIconButton Variant="Outlined"
+                                             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+            </HorizontalStackLayout>
+
+            <tokens:TitleSmall Text="Toggle" Margin="0,20,0,0" />
+            <tokens:BodySmall Text="An unselected toggle drops to a lower emphasis painting of the same variant." />
+
+            <HorizontalStackLayout Spacing="16" Margin="0,8,0,24">
+                <material:MaterialIconButton Variant="Filled" IsToggle="True" IsSelected="True"
+                                             Source="right_arrow_white.png" />
+                <material:MaterialIconButton Variant="Filled" IsToggle="True"
+                                             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialIconButton Variant="Tonal" IsToggle="True" IsSelected="True"
+                                             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+                <material:MaterialIconButton Variant="Outlined" IsToggle="True"
+                                             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}" />
+            </HorizontalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Segmented button" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="For choosing between a small set of related options where seeing all of them at once matters. Past five options, use a menu." />
+
+            <material:MaterialSegmentedButton x:Name="ViewSegments" Margin="0,12,0,24" HorizontalOptions="Fill" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

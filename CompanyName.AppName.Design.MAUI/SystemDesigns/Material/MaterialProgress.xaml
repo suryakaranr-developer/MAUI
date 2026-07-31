@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Components"
+             xmlns:tokens="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens"
+             Title="Progress"
+             x:Class="CompanyName.AppName.Design.MAUI.SystemDesigns.Material.MaterialProgress">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="8">
+
+            <tokens:HeadlineSmall Text="Linear" />
+            <tokens:BodyMedium Text="Determinate when the length of the wait is known, indeterminate when it is not." />
+
+            <VerticalStackLayout Spacing="24" Margin="0,20,0,24">
+                <VerticalStackLayout Spacing="8">
+                    <tokens:LabelMedium Text="25%" />
+                    <material:LinearProgressIndicator Progress="0.25" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Spacing="8">
+                    <tokens:LabelMedium Text="60%" />
+                    <material:LinearProgressIndicator Progress="0.6" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Spacing="8">
+                    <tokens:LabelMedium Text="90%" />
+                    <material:LinearProgressIndicator Progress="0.9" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Spacing="8">
+                    <tokens:LabelMedium Text="Indeterminate" />
+                    <material:LinearProgressIndicator IsIndeterminate="True" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Circular" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="For waits that occupy a small area, such as inside a button or a card." />
+
+            <HorizontalStackLayout Spacing="32" Margin="0,20,0,8" VerticalOptions="Center">
+                <material:CircularProgressIndicator IsIndeterminate="True" />
+                <material:CircularProgressIndicator IsIndeterminate="False" Progress="0.25" />
+                <material:CircularProgressIndicator IsIndeterminate="False" Progress="0.75" />
+            </HorizontalStackLayout>
+
+            <tokens:BodySmall Text="Indeterminate, 25% and 75%." Margin="0,0,0,24" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Components"
+             xmlns:tokens="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens"
+             Title="Type scale"
+             x:Class="CompanyName.AppName.Design.MAUI.SystemDesigns.Material.MaterialTypeScale">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="4">
+
+            <tokens:BodyMedium Text="Fifteen styles in five groups. Each carries its own size, line height, weight and tracking, so placing one is enough to get the metrics right."
+                               Margin="0,0,0,16" />
+
+            <tokens:LabelSmall Text="DISPLAY" Margin="0,8,0,4" />
+            <tokens:DisplayLarge Text="Display large" />
+            <tokens:DisplayMedium Text="Display medium" />
+            <tokens:DisplaySmall Text="Display small" />
+            <tokens:BodySmall Text="For short, high-impact text that is the main thing on screen." Margin="0,4,0,12" />
+
+            <material:MaterialDivider />
+
+            <tokens:LabelSmall Text="HEADLINE" Margin="0,16,0,4" />
+            <tokens:HeadlineLarge Text="Headline large" />
+            <tokens:HeadlineMedium Text="Headline medium" />
+            <tokens:HeadlineSmall Text="Headline small" />
+            <tokens:BodySmall Text="For text introducing a screen or a major section." Margin="0,4,0,12" />
+
+            <material:MaterialDivider />
+
+            <tokens:LabelSmall Text="TITLE" Margin="0,16,0,4" />
+            <tokens:TitleLarge Text="Title large" />
+            <tokens:TitleMedium Text="Title medium" />
+            <tokens:TitleSmall Text="Title small" />
+            <tokens:BodySmall Text="For medium-emphasis text, such as an app bar or the first line of a list item." Margin="0,4,0,12" />
+
+            <material:MaterialDivider />
+
+            <tokens:LabelSmall Text="BODY" Margin="0,16,0,4" />
+            <tokens:BodyLarge Text="Body large" />
+            <tokens:BodyMedium Text="Body medium" />
+            <tokens:BodySmall Text="Body small" />
+            <tokens:BodySmall Text="For running text. Body medium is the default." Margin="0,4,0,12" />
+
+            <material:MaterialDivider />
+
+            <tokens:LabelSmall Text="LABEL" Margin="0,16,0,4" />
+            <tokens:LabelLarge Text="Label large" />
+            <tokens:LabelMedium Text="Label medium" />
+            <tokens:LabelSmall Text="Label small" />
+            <tokens:BodySmall Text="For text inside components, such as a button's label or a badge." Margin="0,4,0,24" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

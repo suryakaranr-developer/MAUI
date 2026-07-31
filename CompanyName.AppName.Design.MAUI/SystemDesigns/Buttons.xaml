@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:standardButtons="clr-namespace:CompanyName.AppName.Design.MAUI.Components.Buttons.StandardButtons"
+             xmlns:iconsButtons="clr-namespace:CompanyName.AppName.Design.MAUI.Components.Buttons.IconsButtons"
+             xmlns:typography="clr-namespace:CompanyName.AppName.Design.MAUI.Typography"
+             Title="Buttons"
+             x:Class="CompanyName.AppName.Design.MAUI.SystemDesigns.Buttons">
+    <ContentPage.Content>
+         <ScrollView>
+     <VerticalStackLayout>
+         <standardButtons:PrimaryButton Text="Primary Button"
+                     
+                        Command="{Binding LoginCommand}"
+                        CommandParameter="DEALER"/>
+         <standardButtons:SecondaryButton Text="Secondary Button"
+                       
+                          Command="{Binding LoginCommand}"
+                          CommandParameter="AFTERMARKET"/>
+         <standardButtons:TertiaryButton Text="Text Button"
+                       
+                         Command="{Binding GoToUrlCommand}"
+                         CommandParameter="{Binding PrivacyPolicyUrl}"/>
+         
+         <iconsButtons:SecondaryLoadingIconButton x:Name="ReadVinButton"
+                                     Source="{AppThemeBinding Light='right_arrow_white.png', Dark='vehicle_data_dark.png'}"
+                                     Size="{OnPlatform WinUI='Large', Default='ExtraLarge'}"
+                                     HorizontalOptions="Center"
+                                     Loading="{Binding IsReadingVin}"
+                                     Command="{Binding ReadVinCommand}"
+                                     IsEnabled="{Binding CanExecute}"
+                                     Margin="5"/>
+         
+         <iconsButtons:PrimaryIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_white.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='ExtraLarge'}"/>
+         <iconsButtons:PrimaryIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_white.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='Large'}"/>
+         <iconsButtons:PrimaryIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_white.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='Small'}"/>
+         <iconsButtons:SecondaryIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='ExtraLarge'}"/>
+         <iconsButtons:SecondaryIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='Large'}"/>
+         <iconsButtons:SecondaryIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='Small'}"/>
+         <iconsButtons:SecondaryLoadingIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='ExtraLarge'}"/>
+         <iconsButtons:SecondaryLoadingIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='Large'}"/>
+         <iconsButtons:SecondaryLoadingIconButton
+             Margin="0,16,0,0"
+             Source="{AppThemeBinding Light='right_arrow_dark.png', Dark='right_arrow_white.png'}"
+             Size="{OnPlatform WinUI='Large', Default='Small'}"/>
+         
+         <typography:Body1 Text="We value your privacy." />
+
+         <Label>
+             <Label.FormattedText>
+                 <FormattedString>
+                     <Span Text="Learn more at " />
+                     <typography:Hyperlink Text="Privacy Policy"
+                                           Url="https://example.com/privacy"
+                                           LaunchMode="External"
+                                           TextColor="Blue"
+                                           TextDecorations="Underline" />
+                 </FormattedString>
+             </Label.FormattedText>
+         </Label>
+         
+         </VerticalStackLayout>
+    </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

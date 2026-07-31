@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Components"
+             xmlns:tokens="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens"
+             Title="Selection"
+             x:Class="CompanyName.AppName.Design.MAUI.SystemDesigns.Material.MaterialSelection">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="8">
+
+            <tokens:HeadlineSmall Text="Switch" />
+            <tokens:BodyMedium Text="Toggles a single setting, taking effect immediately. The thumb grows as well as moving, so the state reads without relying on colour." />
+
+            <VerticalStackLayout Spacing="16" Margin="0,12,0,24">
+                <HorizontalStackLayout Spacing="16">
+                    <material:MaterialSwitch IsToggled="True" />
+                    <tokens:BodyLarge Text="On" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="16">
+                    <material:MaterialSwitch />
+                    <tokens:BodyLarge Text="Off" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Checkbox" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="For selecting any number of options from a set." />
+
+            <VerticalStackLayout Spacing="4" Margin="0,12,0,24">
+                <material:MaterialCheckBox Text="Email notifications" IsChecked="True" />
+                <material:MaterialCheckBox Text="Push notifications" IsChecked="True" />
+                <material:MaterialCheckBox Text="SMS notifications" />
+                <material:MaterialCheckBox Text="Unavailable" IsEnabled="False" />
+            </VerticalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Radio button" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="For exactly one option from a set. Buttons sharing a group name clear each other." />
+
+            <VerticalStackLayout Spacing="4" Margin="0,12,0,24">
+                <material:MaterialRadioButton Text="Standard delivery" GroupName="delivery" Value="standard" IsChecked="True" />
+                <material:MaterialRadioButton Text="Express delivery" GroupName="delivery" Value="express" />
+                <material:MaterialRadioButton Text="Collect in store" GroupName="delivery" Value="collect" />
+            </VerticalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Chips" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="Compact elements for an option, an attribute or an action." />
+
+            <tokens:TitleSmall Text="Assist" Margin="0,16,0,0" />
+            <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                <material:MaterialChip Text="Set reminder" Variant="Assist" />
+                <material:MaterialChip Text="Get directions" Variant="Assist" />
+            </HorizontalStackLayout>
+
+            <tokens:TitleSmall Text="Filter" Margin="0,16,0,0" />
+            <tokens:BodySmall Text="Selectable. Tap to toggle the check." />
+            <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                <material:MaterialChip Text="Unread" Variant="Filter" IsSelected="True" />
+                <material:MaterialChip Text="Starred" Variant="Filter" />
+                <material:MaterialChip Text="Archived" Variant="Filter" />
+            </HorizontalStackLayout>
+
+            <tokens:TitleSmall Text="Input" Margin="0,16,0,0" />
+            <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
+                <material:MaterialChip Text="Ada Lovelace" Variant="Input" IsRemovable="True" />
+                <material:MaterialChip Text="Alan Turing" Variant="Input" IsRemovable="True" />
+            </HorizontalStackLayout>
+
+            <tokens:TitleSmall Text="Suggestion" Margin="0,16,0,0" />
+            <HorizontalStackLayout Spacing="8" Margin="0,8,0,24">
+                <material:MaterialChip Text="Sounds good" Variant="Suggestion" />
+                <material:MaterialChip Text="On my way" Variant="Suggestion" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

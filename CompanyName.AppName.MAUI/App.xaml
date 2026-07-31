@@ -1,0 +1,19 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CompanyName.AppName.MAUI"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens;assembly=CompanyName.AppName.Design.MAUI"
+             x:Class="CompanyName.AppName.MAUI.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Material colour roles as DynamicResource keys (MaterialPrimary, ...), refreshed
+                     on theme change. Merged first so later dictionaries could override a role. -->
+                <material:MaterialColorResources />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml;assembly=CompanyName.AppName.Design.MAUI"/>
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+

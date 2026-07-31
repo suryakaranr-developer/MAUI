@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Components"
+             xmlns:tokens="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens"
+             Title="Containment"
+             x:Class="CompanyName.AppName.Design.MAUI.SystemDesigns.Material.MaterialContainment">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="8">
+
+            <tokens:HeadlineSmall Text="Cards" />
+            <tokens:BodyMedium Text="Containers for content about a single subject. The three variants differ in how strongly they separate from the surface behind them." />
+
+            <VerticalStackLayout Spacing="16" Margin="0,16,0,24">
+
+                <material:MaterialCard Variant="Elevated">
+                    <VerticalStackLayout Spacing="4">
+                        <tokens:TitleMedium Text="Elevated" />
+                        <tokens:BodyMedium Text="Casts a shadow. Use over busy or scrolling backgrounds, where a border alone would be lost." />
+                        <material:MaterialButton Text="Open" Variant="Text" Margin="-12,8,0,0" />
+                    </VerticalStackLayout>
+                </material:MaterialCard>
+
+                <material:MaterialCard Variant="Filled">
+                    <VerticalStackLayout Spacing="4">
+                        <tokens:TitleMedium Text="Filled" />
+                        <tokens:BodyMedium Text="Relies on tone alone. The most subtle of the three, for cards that group content without demanding attention." />
+                        <material:MaterialButton Text="Open" Variant="Text" Margin="-12,8,0,0" />
+                    </VerticalStackLayout>
+                </material:MaterialCard>
+
+                <material:MaterialCard Variant="Outlined">
+                    <VerticalStackLayout Spacing="4">
+                        <tokens:TitleMedium Text="Outlined" />
+                        <tokens:BodyMedium Text="Draws a border. The clearest boundary without a shadow, which keeps it legible in high contrast settings." />
+                        <material:MaterialButton Text="Open" Variant="Text" Margin="-12,8,0,0" />
+                    </VerticalStackLayout>
+                </material:MaterialCard>
+
+            </VerticalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="List items" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="Grows from one line to two as supporting text is added." />
+
+            <material:MaterialCard Variant="Outlined" Padding="0" Margin="0,16,0,24">
+                <VerticalStackLayout>
+                    <material:MaterialListItem Headline="Inbox" Trailing="24" />
+                    <material:MaterialDivider Inset="16" />
+                    <material:MaterialListItem Headline="Ada Lovelace"
+                                               Supporting="Re: analytical engine notes"
+                                               Trailing="09:41" />
+                    <material:MaterialDivider Inset="16" />
+                    <material:MaterialListItem Headline="Alan Turing"
+                                               Supporting="Draft: on computable numbers"
+                                               Trailing="Yesterday" />
+                    <material:MaterialDivider Inset="16" />
+                    <material:MaterialListItem Headline="Archive" />
+                </VerticalStackLayout>
+            </material:MaterialCard>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Badges" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="Marks that something needs attention. Without a count it is a dot; with one it becomes a pill, and overflows past 99." />
+
+            <HorizontalStackLayout Spacing="24" Margin="0,16,0,24" VerticalOptions="Center">
+                <material:MaterialBadge />
+                <material:MaterialBadge Count="3" />
+                <material:MaterialBadge Count="24" />
+                <material:MaterialBadge Count="150" />
+            </HorizontalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Dividers" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="A rule separating groups of content. Inset it to align with a shared icon column." />
+
+            <VerticalStackLayout Spacing="16" Margin="0,16,0,24">
+                <material:MaterialDivider />
+                <material:MaterialDivider Inset="32" />
+                <material:MaterialDivider Inset="64" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

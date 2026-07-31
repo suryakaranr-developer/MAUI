@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:material="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Components"
+             xmlns:tokens="clr-namespace:CompanyName.AppName.Design.MAUI.Material.Tokens"
+             Title="Text fields"
+             x:Class="CompanyName.AppName.Design.MAUI.SystemDesigns.Material.MaterialTextFields">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="8">
+
+            <tokens:HeadlineSmall Text="Outlined" />
+            <tokens:BodyMedium Text="The label starts inside the field and rises into the border when the field takes focus or holds a value, so the field never loses its description." />
+
+            <VerticalStackLayout Spacing="20" Margin="0,16,0,24">
+                <material:MaterialTextField Label="Full name" Variant="Outlined" />
+                <material:MaterialTextField Label="Email"
+                                            Variant="Outlined"
+                                            SupportingText="We will only use this to sign you in." />
+                <material:MaterialTextField Label="Password"
+                                            Variant="Outlined"
+                                            IsPassword="True" />
+                <material:MaterialTextField Label="Phone"
+                                            Variant="Outlined"
+                                            Text="not-a-number"
+                                            HasError="True"
+                                            SupportingText="Enter a valid phone number." />
+            </VerticalStackLayout>
+
+            <material:MaterialDivider />
+
+            <tokens:HeadlineSmall Text="Filled" Margin="0,24,0,0" />
+            <tokens:BodyMedium Text="A tonal container with an underline. The higher emphasis of the two, for forms that are the main content of a screen." />
+
+            <VerticalStackLayout Spacing="20" Margin="0,16,0,24">
+                <material:MaterialTextField Label="Full name" Variant="Filled" />
+                <material:MaterialTextField Label="Email"
+                                            Variant="Filled"
+                                            SupportingText="We will only use this to sign you in." />
+                <material:MaterialTextField Label="Password"
+                                            Variant="Filled"
+                                            IsPassword="True" />
+                <material:MaterialTextField Label="Phone"
+                                            Variant="Filled"
+                                            Text="not-a-number"
+                                            HasError="True"
+                                            SupportingText="Enter a valid phone number." />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- Plain net9.0, deliberately not a MAUI platform target. View models and the navigation
+         contract live here so they can be built and unit tested without the MAUI workload or a
+         device. The app head supplies the platform implementations. -->
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CompanyName.AppName.Api\CompanyName.AppName.Api.csproj" />
+    </ItemGroup>
+
+</Project>
