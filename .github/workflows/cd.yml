@@ -164,6 +164,7 @@ jobs:
         run: >
           dotnet publish CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
           --framework net9.0-android
+          -p:TargetFrameworkOverride=net9.0-android
           --configuration Release
           --output ./artifacts/android
           -p:AppEnvironment=${{ needs.setup.outputs.environment }}
@@ -180,6 +181,7 @@ jobs:
         run: >
           dotnet publish CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
           --framework net9.0-android
+          -p:TargetFrameworkOverride=net9.0-android
           --configuration Release
           --output ./artifacts/android
           -p:AppEnvironment=${{ needs.setup.outputs.environment }}
@@ -275,6 +277,7 @@ jobs:
         run: >
           dotnet publish CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
           --framework net9.0-ios
+          -p:TargetFrameworkOverride=net9.0-ios
           --configuration Release
           --output ./artifacts/ios
           -p:AppEnvironment=${{ needs.setup.outputs.environment }}
@@ -292,6 +295,7 @@ jobs:
         run: >
           dotnet build CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
           --framework net9.0-ios
+          -p:TargetFrameworkOverride=net9.0-ios
           --configuration Release
           -p:AppEnvironment=${{ needs.setup.outputs.environment }}
           -p:ApplicationDisplayVersion=${{ needs.setup.outputs.display_version }}

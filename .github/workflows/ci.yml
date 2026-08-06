@@ -95,6 +95,7 @@ jobs:
         run: >
           dotnet build CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
           --framework net9.0-android
+          -p:TargetFrameworkOverride=net9.0-android
           --configuration Release
           -p:AppEnvironment=${{ matrix.environment }}
           -p:AndroidPackageFormat=apk

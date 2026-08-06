@@ -293,8 +293,18 @@ Building locally without `-p:AppEnvironment` yields RELEASE, so IDE behaviour is
 
 ```bash
 dotnet build CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj \
-  -f net9.0-android -c Release -p:AppEnvironment=UAT
+  -f net9.0-android -c Release -p:AppEnvironment=UAT \
+  -p:TargetFrameworkOverride=net9.0-android
 ```
+
+### Building for a single platform
+
+`-p:TargetFrameworkOverride=<tfm>` narrows every MAUI project to one target framework. This is
+**required on a Linux runner**: restore evaluates all of `TargetFrameworks` regardless of the
+`-f`/`--framework` argument, so an Android-only build would still try to resolve the iOS workload
+packs and fail with `Microsoft.iOS.Sdk… does not exist in any of the workloads available`. Because
+it is passed on the command line it is a global property, so the referenced MAUI libraries narrow
+along with the app head. Omit it and the TFM list is unchanged.
 
 ### Signing
 

@@ -5,6 +5,12 @@
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+
+		<!-- Narrows the build to one platform, e.g. -p:TargetFrameworkOverride=net9.0-android.
+		     Restore evaluates every TFM listed above regardless of the framework argument, so a
+		     Linux runner would try to resolve the iOS workload packs and fail. Passed on the
+		     command line it is a global property, so the referenced MAUI libraries narrow too. -->
+		<TargetFrameworks Condition="'$(TargetFrameworkOverride)' != ''">$(TargetFrameworkOverride)</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>CompanyName.AppName.MAUI</RootNamespace>
 		<UseMaui>true</UseMaui>
