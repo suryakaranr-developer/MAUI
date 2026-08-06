@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Maui;
 using CompanyName.AppName.Design.MAUI.Extensions;
+using CompanyName.AppName.MAUI.Configuration;
 using CompanyName.AppName.MAUI.Navigation;
 using CompanyName.AppName.MAUI.Views;
+using CompanyName.AppName.Core.Configuration;
 using CompanyName.AppName.Core.Navigation;
 using CompanyName.AppName.Core.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,7 @@ public static class MauiProgram
 			.UseMauiCommunityToolkit()
 			.UseApplicationDesignSystem();
 
+		RegisterConfiguration(builder.Services);
 		RegisterNavigation(builder.Services);
 		RegisterViewModels(builder.Services);
 		RegisterPages(builder.Services);
@@ -30,6 +33,15 @@ public static class MauiProgram
 #endif
 
 		return builder.Build();
+	}
+
+	/// <summary>
+	/// Registers the build environment the app was compiled for. Singleton because the values are
+	/// stamped into the assembly and cannot change while the process is alive.
+	/// </summary>
+	static void RegisterConfiguration(IServiceCollection services)
+	{
+		services.AddSingleton<IAppEnvironment, BuildAppEnvironment>();
 	}
 
 	/// <summary>

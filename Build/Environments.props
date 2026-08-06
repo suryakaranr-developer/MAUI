@@ -1,0 +1,56 @@
+<Project>
+
+    <!--
+        Per-environment build configuration, imported by the app head after its own PropertyGroup
+        so these values win.
+
+        Selected with -p:AppEnvironment=UAT|STAGE|RELEASE. Defaults to RELEASE so a plain
+        `dotnet build` from an IDE behaves exactly as it did before this file existed.
+
+        UAT and STAGE get a suffixed ApplicationId so all three builds install side by side on a
+        single device. RELEASE deliberately keeps the unsuffixed id — changing it would orphan
+        every existing install.
+    -->
+
+    <PropertyGroup Condition="'$(AppEnvironment)' == ''">
+        <AppEnvironment>RELEASE</AppEnvironment>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(AppEnvironment)' == 'UAT'">
+        <ApplicationTitle>AppName UAT</ApplicationTitle>
+        <ApplicationId>com.companyname.companyname.appname.maui.uat</ApplicationId>
+        <ApiBaseUrl>https://api-uat.companyname.com/</ApiBaseUrl>
+        <DefineConstants>$(DefineConstants);ENV_UAT</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(AppEnvironment)' == 'STAGE'">
+        <ApplicationTitle>AppName STAGE</ApplicationTitle>
+        <ApplicationId>com.companyname.companyname.appname.maui.stage</ApplicationId>
+        <ApiBaseUrl>https://api-stage.companyname.com/</ApiBaseUrl>
+        <DefineConstants>$(DefineConstants);ENV_STAGE</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(AppEnvironment)' == 'RELEASE'">
+        <ApplicationTitle>AppName</ApplicationTitle>
+        <ApplicationId>com.companyname.companyname.appname.maui</ApplicationId>
+        <ApiBaseUrl>https://api.companyname.com/</ApiBaseUrl>
+        <DefineConstants>$(DefineConstants);ENV_RELEASE</DefineConstants>
+    </PropertyGroup>
+
+    <!--
+        Baked into the assembly rather than generated into a source file, so no build-ordering
+        problem and nothing to keep out of source control. Read back at runtime by
+        BuildAppEnvironment in the app head.
+    -->
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>AppEnvironment</_Parameter1>
+            <_Parameter2>$(AppEnvironment)</_Parameter2>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>ApiBaseUrl</_Parameter1>
+            <_Parameter2>$(ApiBaseUrl)</_Parameter2>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+</Project>

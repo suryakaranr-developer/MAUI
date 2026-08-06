@@ -244,6 +244,81 @@ dotnet test CompanyName.AppName.Core.Tests
 
 ---
 
+## CI/CD
+
+Two GitHub Actions workflows, both supporting the **UAT**, **STAGE** and **RELEASE** environments.
+
+| Workflow | Trigger | Does |
+| --- | --- | --- |
+| [ci.yml](.github/workflows/ci.yml) | push / PR to `main`, manual | Unit tests, then an Android compile for all three environments in a matrix. Linux only — no macOS minutes. |
+| [cd.yml](.github/workflows/cd.yml) | manual (pick environment), or tag push | Tests, then signed Android AAB/APK and iOS IPA for one environment, uploaded as artifacts. |
+
+### Running a deployment build
+
+From the Actions tab → **CD** → *Run workflow*, choose the environment, optionally a display
+version, and which platforms to build. Or push a tag:
+
+| Tag | Environment |
+| --- | --- |
+| `v1.4.0-uat` | UAT |
+| `v1.4.0-stage` | STAGE |
+| `v1.4.0` | RELEASE |
+
+`ApplicationVersion` (the build number) is always the workflow run number;
+`ApplicationDisplayVersion` comes from the tag or input, defaulting to `1.0.<run number>`.
+
+### How environments differ
+
+Defined in [Build/Environments.props](Build/Environments.props), imported by the app head and
+selected with `-p:AppEnvironment=…`. UAT and STAGE get a suffixed app id so all three install side
+by side on one device; RELEASE keeps the unsuffixed id.
+
+| | Display name | Application id | API base URL | Constant |
+| --- | --- | --- | --- | --- |
+| UAT | AppName UAT | `…appname.maui.uat` | `https://api-uat.companyname.com/` | `ENV_UAT` |
+| STAGE | AppName STAGE | `…appname.maui.stage` | `https://api-stage.companyname.com/` | `ENV_STAGE` |
+| RELEASE | AppName | `…appname.maui` | `https://api.companyname.com/` | `ENV_RELEASE` |
+
+**Point these at your real hosts** — the URLs above are placeholders.
+
+The values are stamped into the assembly as `AssemblyMetadata` and read back through
+[IAppEnvironment](CompanyName.AppName.Core/Configuration/IAppEnvironment.cs), registered as a
+singleton in `MauiProgram`. Inject it wherever the environment matters:
+
+```csharp
+public MyViewModel(IAppEnvironment environment) => _baseUrl = environment.ApiBaseUrl;
+```
+
+Building locally without `-p:AppEnvironment` yields RELEASE, so IDE behaviour is unchanged.
+
+```bash
+dotnet build CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj \
+  -f net9.0-android -c Release -p:AppEnvironment=UAT
+```
+
+### Signing
+
+**Signing is optional and the pipeline is green without it** — with no secrets it emits an
+unsigned APK and compiles iOS for the simulator. Add the secrets and the same jobs start producing
+a signed AAB/APK and an IPA.
+
+Create GitHub Environments named `UAT`, `STAGE` and `RELEASE` (Settings → Environments) — these
+scope the secrets per environment and are where you add approval gates for RELEASE. Then set:
+
+| Secret | Platform |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | Android — `base64 -i release.keystore` |
+| `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | Android |
+| `IOS_CERTIFICATE_BASE64`, `IOS_CERTIFICATE_PASSWORD` | iOS — distribution `.p12` |
+| `IOS_PROVISIONING_PROFILE_BASE64`, `IOS_PROVISIONING_PROFILE_NAME` | iOS |
+| `IOS_CODESIGN_KEY` | iOS — e.g. `Apple Distribution: Company (TEAMID)` |
+
+Each environment needs its **own** provisioning profile, matching that environment's application
+id. The keystore is decoded to `$RUNNER_TEMP` (outside the workspace, so no artifact glob can pick
+it up) and deleted in an `always()` step; iOS certs go into a throwaway keychain.
+
+---
+
 ## Getting started
 
 ```bash
