@@ -6,8 +6,9 @@ name: CD
 # tag: v*-uat / v*-stage / v* map to the matching environment.
 #
 # Signing is optional. With no signing secrets configured the pipeline still runs green and
-# emits an unsigned APK and a simulator build, so the pipeline is useful on day one. Add the
-# secrets to a GitHub Environment and the same jobs start emitting a signed APK and an IPA.
+# emits an unsigned AAB + APK and a simulator build, so the pipeline is useful on day one. Add
+# the secrets to a GitHub Environment and the same jobs start emitting a signed AAB + APK and
+# an IPA.
 
 on:
   workflow_dispatch:
@@ -159,6 +160,9 @@ jobs:
           # artifact upload glob.
           printf '%s' "$KEYSTORE" | base64 -d > "$RUNNER_TEMP/signing.keystore"
 
+      # AndroidPackageFormats takes a list, so both an .aab for the store and an .apk for
+      # sideloading come out of one publish. The semicolon is escaped as %3B because MSBuild
+      # would otherwise read it as the start of a second -p: property.
       - name: Publish signed AAB + APK
         if: steps.signing.outputs.enabled == 'true'
         run: >
@@ -170,13 +174,16 @@ jobs:
           -p:AppEnvironment=${{ needs.setup.outputs.environment }}
           -p:ApplicationDisplayVersion=${{ needs.setup.outputs.display_version }}
           -p:ApplicationVersion=${{ needs.setup.outputs.build_version }}
+          -p:AndroidPackageFormats=aab%3Bapk
           -p:AndroidKeyStore=true
           -p:AndroidSigningKeyStore=$RUNNER_TEMP/signing.keystore
           -p:AndroidSigningStorePass='${{ secrets.ANDROID_KEYSTORE_PASSWORD }}'
           -p:AndroidSigningKeyAlias='${{ secrets.ANDROID_KEY_ALIAS }}'
           -p:AndroidSigningKeyPass='${{ secrets.ANDROID_KEY_PASSWORD }}'
 
-      - name: Publish unsigned APK
+      # Unsigned, so the .aab here is a build artifact only — Play will reject it until it is
+      # signed. It exists to keep both formats in step across the signed and unsigned paths.
+      - name: Publish unsigned AAB + APK
         if: steps.signing.outputs.enabled != 'true'
         run: >
           dotnet publish CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
@@ -187,8 +194,23 @@ jobs:
           -p:AppEnvironment=${{ needs.setup.outputs.environment }}
           -p:ApplicationDisplayVersion=${{ needs.setup.outputs.display_version }}
           -p:ApplicationVersion=${{ needs.setup.outputs.build_version }}
-          -p:AndroidPackageFormat=apk
+          -p:AndroidPackageFormats=aab%3Bapk
           -p:AndroidKeyStore=false
+
+      # The universal APK is built by _CreateUniversalApkFromBundle, which the Android SDK runs
+      # after publish has already copied files to --output, so the APK is left behind in bin/.
+      # Collect it explicitly rather than relying on publish to hand it over.
+      - name: Collect universal APK
+        run: |
+          set -euo pipefail
+          bin=CompanyName.AppName.MAUI/bin/Release/net9.0-android
+          count=$(find "$bin" -maxdepth 1 -name '*.apk' | wc -l | tr -d ' ')
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No APK found in $bin — expected one alongside the AAB."
+            exit 1
+          fi
+          cp "$bin"/*.apk ./artifacts/android/
+          ls -l ./artifacts/android/
 
       - name: Remove keystore
         if: always()
