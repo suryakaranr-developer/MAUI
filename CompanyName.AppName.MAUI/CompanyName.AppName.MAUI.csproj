@@ -21,7 +21,7 @@
 		<ApplicationTitle>CompanyName.AppName.MAUI</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.companyname.appname.maui</ApplicationId>
+		<ApplicationId>com.planet.ptfmobile</ApplicationId>
 		<ApplicationIdGuid>c764270a-7a06-43f7-8a26-bbf27007d7b4</ApplicationIdGuid>
 
 		<!-- Versions -->

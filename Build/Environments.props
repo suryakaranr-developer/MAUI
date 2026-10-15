@@ -18,21 +18,21 @@
 
     <PropertyGroup Condition="'$(AppEnvironment)' == 'UAT'">
         <ApplicationTitle>AppName UAT</ApplicationTitle>
-        <ApplicationId>com.companyname.companyname.appname.maui.uat</ApplicationId>
+        <ApplicationId>com.planet.ptfmobile.uat</ApplicationId>
         <ApiBaseUrl>https://api-uat.companyname.com/</ApiBaseUrl>
         <DefineConstants>$(DefineConstants);ENV_UAT</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(AppEnvironment)' == 'STAGE'">
         <ApplicationTitle>AppName STAGE</ApplicationTitle>
-        <ApplicationId>com.companyname.companyname.appname.maui.stage</ApplicationId>
+        <ApplicationId>com.planet.ptfmobile.stage</ApplicationId>
         <ApiBaseUrl>https://api-stage.companyname.com/</ApiBaseUrl>
         <DefineConstants>$(DefineConstants);ENV_STAGE</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(AppEnvironment)' == 'RELEASE'">
         <ApplicationTitle>AppName</ApplicationTitle>
-        <ApplicationId>com.companyname.companyname.appname.maui</ApplicationId>
+        <ApplicationId>com.planet.ptfmobile</ApplicationId>
         <ApiBaseUrl>https://api.companyname.com/</ApiBaseUrl>
         <DefineConstants>$(DefineConstants);ENV_RELEASE</DefineConstants>
     </PropertyGroup>

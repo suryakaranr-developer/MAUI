@@ -38,6 +38,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # Apple Developer Team ID (App ID prefix) the iOS profile must belong to.
+  IOS_TEAM_ID: 866YLRR3U3
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -264,6 +266,7 @@ jobs:
           fi
 
       - name: Import certificate and provisioning profile
+        id: import
         if: steps.signing.outputs.enabled == 'true'
         env:
           CERT: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
@@ -289,10 +292,57 @@ jobs:
           security list-keychain -d user -s "$keychain"
           security set-key-partition-list -S apple-tool:,apple: -k "$keychain_password" "$keychain" > /dev/null
 
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp "$profile_path" ~/Library/MobileDevice/Provisioning\ Profiles/
+          # Read the profile so the signing identity, profile name and App ID come from the
+          # secrets themselves instead of three more values to keep in sync.
+          plist="$RUNNER_TEMP/profile.plist"
+          security cms -D -i "$profile_path" > "$plist"
+          profile_uuid=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$plist")
+          profile_name=$(/usr/libexec/PlistBuddy -c "Print :Name" "$plist")
+          profile_appid=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" "$plist")
+          profile_team=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" "$plist")
 
-          rm -f "$cert_path" "$profile_path"
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp "$profile_path" ~/Library/MobileDevice/Provisioning\ Profiles/"$profile_uuid".mobileprovision
+
+          identity=$(security find-identity -v -p codesigning "$keychain" | sed -n 's/.*"\(.*\)".*/\1/p' | head -1)
+          [ -n "$identity" ] || { echo "::error::No code-signing identity found in the .p12"; exit 1; }
+
+          echo "Profile: $profile_name ($profile_appid, team $profile_team)"
+          echo "Identity: $identity"
+          {
+            echo "profile_name=$profile_name"
+            echo "profile_appid=$profile_appid"
+            echo "team=$profile_team"
+            echo "identity=$identity"
+          } >> "$GITHUB_OUTPUT"
+
+          rm -f "$cert_path" "$profile_path" "$plist"
+
+      # A profile only works for the App ID it was created for. Fail early with a clear
+      # message instead of a cryptic Xcode signing error. UAT and STAGE use suffixed ids (see
+      # Build/Environments.props), so each environment needs its own profile.
+      - name: Check profile matches the app's bundle id
+        if: steps.signing.outputs.enabled == 'true'
+        env:
+          PROFILE_APPID: ${{ steps.import.outputs.profile_appid }}
+          TEAM: ${{ steps.import.outputs.team }}
+        run: |
+          bundle_id=$(dotnet msbuild CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj \
+            -p:Configuration=Release -p:AppEnvironment=${{ needs.setup.outputs.environment }} \
+            -p:TargetFramework=net9.0-ios -p:TargetFrameworkOverride=net9.0-ios \
+            -getProperty:ApplicationId | tr -d '[:space:]')
+          echo "App bundle id : $bundle_id"
+          echo "Profile app id: $PROFILE_APPID"
+          if [ "$TEAM" != "$IOS_TEAM_ID" ]; then
+            echo "::error::Profile belongs to team '$TEAM' but IOS_TEAM_ID is '$IOS_TEAM_ID'."
+            exit 1
+          fi
+          case "$PROFILE_APPID" in
+            "$TEAM.$bundle_id"|"$TEAM.*") echo "Profile matches." ;;
+            *)
+              echo "::error::Profile is for '$PROFILE_APPID' but the ${{ needs.setup.outputs.environment }} build uses bundle id '$bundle_id'. Upload a profile for that App ID."
+              exit 1 ;;
+          esac
 
       - name: Publish signed IPA
         if: steps.signing.outputs.enabled == 'true'
@@ -307,8 +357,21 @@ jobs:
           -p:ApplicationVersion=${{ needs.setup.outputs.build_version }}
           -p:RuntimeIdentifier=ios-arm64
           -p:BuildIpa=true
-          -p:CodesignKey='${{ secrets.IOS_CODESIGN_KEY }}'
-          -p:CodesignProvision='${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}'
+          -p:CodesignKey='${{ steps.import.outputs.identity }}'
+          -p:CodesignProvision='${{ steps.import.outputs.profile_name }}'
+
+      # The IPA is produced by the iOS SDK's own targets and is not guaranteed to be copied to
+      # --output (same behaviour as the Android APK), so collect it explicitly.
+      - name: Collect IPA
+        if: steps.signing.outputs.enabled == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p ./artifacts/ios
+          ipa=$(find CompanyName.AppName.MAUI/bin ./artifacts/ios -name '*.ipa' -print -quit)
+          [ -n "$ipa" ] || { echo "::error::No .ipa produced"; exit 1; }
+          echo "IPA = $ipa"
+          case "$ipa" in ./artifacts/ios/*) ;; *) cp "$ipa" ./artifacts/ios/ ;; esac
+          ls -l ./artifacts/ios/
 
       # Without a certificate an IPA is impossible, so verify the code still compiles for
       # iOS by targeting the simulator, which needs no signing identity.
@@ -329,7 +392,7 @@ jobs:
         if: always()
         run: |
           security delete-keychain "$RUNNER_TEMP/build.keychain-db" 2>/dev/null || true
-          rm -f ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+          rm -f ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision || true
 
       - name: Upload IPA
         if: steps.signing.outputs.enabled == 'true'
