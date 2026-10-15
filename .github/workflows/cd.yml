@@ -252,6 +252,26 @@ jobs:
       - name: Install MAUI iOS workload
         run: dotnet workload install maui-ios --skip-sign-check
 
+      # The iOS SDK pack is tied to one Xcode release (e.g. SDK 26.5 needs Xcode 26.5) and the
+      # runner's default Xcode is often newer, which fails with "requires Xcode X". Pick the
+      # Xcode that matches the SDK the workload actually installed.
+      - name: Select Xcode matching the iOS SDK
+        run: |
+          set -euo pipefail
+          pack=$(ls -d "${DOTNET_ROOT:-$HOME/.dotnet}"/packs/Microsoft.iOS.Sdk.net9.0_* | sort -V | tail -1)
+          want=$(basename "$pack" | sed -E 's/.*_([0-9]+\.[0-9]+)$/\1/')
+          echo "iOS SDK pack: $pack (needs Xcode $want)"
+          xcode=$(find /Applications -maxdepth 1 -name "Xcode_${want}*.app" -type d ! -iname '*beta*' ! -iname '*RC*' | sort -V | tail -1)
+          if [ -z "$xcode" ]; then
+            echo "::error::Xcode $want is not installed on this runner. Installed:"
+            ls -d /Applications/Xcode*.app
+            exit 1
+          fi
+          echo "Using $xcode"
+          sudo xcode-select -s "$xcode/Contents/Developer"
+          echo "DEVELOPER_DIR=$xcode/Contents/Developer" >> "$GITHUB_ENV"
+          xcodebuild -version
+
       - name: Check for signing secrets
         id: signing
         env:
