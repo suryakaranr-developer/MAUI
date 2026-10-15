@@ -1,8 +1,8 @@
 name: CI
 
-# Fast feedback on every change: unit tests plus an Android compile.
-# Deliberately no macOS job here — iOS is covered by the CD pipeline, and macOS runner
-# minutes bill at 10x the Linux rate.
+# Fast feedback on every change: unit tests plus an Android and an iOS compile.
+# The iOS job runs on macOS, which bills at 10x the Linux rate, so it compiles for the
+# simulator only (no signing) and shares the Android matrix of environments.
 
 on:
   push:
@@ -99,3 +99,41 @@ jobs:
           --configuration Release
           -p:AppEnvironment=${{ matrix.environment }}
           -p:AndroidPackageFormat=apk
+
+  build-ios:
+    name: Build iOS (${{ matrix.environment }})
+    runs-on: macos-latest
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [UAT, STAGE, RELEASE]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-ios-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: nuget-ios-${{ runner.os }}-
+
+      - name: Install MAUI iOS workload
+        run: dotnet workload install maui-ios --skip-sign-check
+
+      # Compile only, for the simulator so no certificate is needed. The signed IPA is the
+      # CD pipeline's job.
+      - name: Build
+        run: >
+          dotnet build CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
+          --framework net9.0-ios
+          -p:TargetFrameworkOverride=net9.0-ios
+          --configuration Release
+          -p:AppEnvironment=${{ matrix.environment }}
+          -p:RuntimeIdentifier=iossimulator-arm64
+          -p:CodesignKey=
