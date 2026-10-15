@@ -38,6 +38,16 @@
     </PropertyGroup>
 
     <!--
+        iOS signs with a provisioning profile bound to one explicit App ID, so every iOS build
+        keeps the unsuffixed bundle id. The title, API url and AppEnvironment above still differ
+        per environment. Remove this block once UAT/STAGE have their own .uat/.stage profiles to
+        get side-by-side installs on iOS too.
+    -->
+    <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <ApplicationId>com.planet.ptfmobile</ApplicationId>
+    </PropertyGroup>
+
+    <!--
         Baked into the assembly rather than generated into a source file, so no build-ordering
         problem and nothing to keep out of source control. Read back at runtime by
         BuildAppEnvironment in the app head.
