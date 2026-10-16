@@ -227,6 +227,7 @@ jobs:
           --configuration Release
           -p:AppEnvironment=${{ matrix.environment }}
           -p:RuntimeIdentifier=iossimulator-arm64
+          -p:EnableAssemblyILStripping=false
           -p:CodesignKey=
 
       - name: Package simulator app

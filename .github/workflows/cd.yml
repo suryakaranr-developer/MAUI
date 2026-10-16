@@ -411,6 +411,7 @@ jobs:
           -p:ApplicationDisplayVersion=${{ needs.setup.outputs.display_version }}
           -p:ApplicationVersion=${{ needs.setup.outputs.build_version }}
           -p:RuntimeIdentifier=ios-arm64
+          -p:EnableAssemblyILStripping=false
           -p:BuildIpa=true
           -p:CodesignKey='${{ steps.import.outputs.identity }}'
           -p:CodesignProvision='${{ steps.import.outputs.profile_name }}'
@@ -441,6 +442,7 @@ jobs:
           -p:ApplicationDisplayVersion=${{ needs.setup.outputs.display_version }}
           -p:ApplicationVersion=${{ needs.setup.outputs.build_version }}
           -p:RuntimeIdentifier=iossimulator-arm64
+          -p:EnableAssemblyILStripping=false
           -p:CodesignKey=
 
       # No signing secrets means no IPA is possible, so package the simulator build instead so the
