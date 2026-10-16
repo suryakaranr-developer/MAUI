@@ -437,7 +437,7 @@ jobs:
           dotnet build CompanyName.AppName.MAUI/CompanyName.AppName.MAUI.csproj
           --framework net9.0-ios
           -p:TargetFrameworkOverride=net9.0-ios
-          --configuration Release
+          --configuration Debug
           -p:AppEnvironment=${{ needs.setup.outputs.environment }}
           -p:ApplicationDisplayVersion=${{ needs.setup.outputs.display_version }}
           -p:ApplicationVersion=${{ needs.setup.outputs.build_version }}
@@ -453,7 +453,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p ./artifacts/ios
-          app=$(find CompanyName.AppName.MAUI/bin/Release/net9.0-ios -maxdepth 3 -name '*.app' -type d | head -1)
+          app=$(find CompanyName.AppName.MAUI/bin/Debug/net9.0-ios -maxdepth 3 -name '*.app' -type d | head -1)
           [ -n "$app" ] || { echo "::error::No .app produced"; exit 1; }
           ditto -c -k --sequesterRsrc --keepParent "$app" "./artifacts/ios/MAUI-${{ needs.setup.outputs.environment }}-ios-simulator.zip"
 
