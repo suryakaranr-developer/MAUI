@@ -28,7 +28,7 @@ on:
         required: true
         type: choice
         options: [both, android, ios]
-        default: both
+        default: android
   push:
     tags:
       - 'v*'
@@ -49,7 +49,8 @@ jobs:
   # whether they were triggered by a manual run or by a tag push.
   setup:
     name: Resolve build parameters
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     outputs:
       environment: ${{ steps.resolve.outputs.environment }}
       display_version: ${{ steps.resolve.outputs.display_version }}
@@ -96,7 +97,8 @@ jobs:
 
   test:
     name: Unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -111,7 +113,9 @@ jobs:
     name: Android (${{ needs.setup.outputs.environment }})
     needs: [setup, test]
     if: needs.setup.outputs.build_android == 'true'
-    runs-on: ubuntu-latest
+    # Override with the ANDROID_RUNNER repo variable (JSON label list) to use your own machine.
+    runs-on: ${{ fromJSON(vars.ANDROID_RUNNER || '["ubuntu-24.04"]') }}
+    timeout-minutes: 45
     # Drives approval gates and scopes the signing secrets. Create these under
     # Settings → Environments with the same names.
     environment: ${{ needs.setup.outputs.environment }}
@@ -135,6 +139,15 @@ jobs:
           path: ~/.nuget/packages
           key: nuget-android-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
           restore-keys: nuget-android-${{ runner.os }}-
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: gradle-${{ runner.os }}-
 
       - name: Install MAUI Android workload
         run: dotnet workload install maui-android --skip-sign-check
@@ -226,13 +239,16 @@ jobs:
             ./artifacts/android/*.apk
             ./artifacts/android/*.aab
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 3
 
   ios:
     name: iOS (${{ needs.setup.outputs.environment }})
     needs: [setup, test]
     if: needs.setup.outputs.build_ios == 'true'
-    runs-on: macos-latest
+    # macOS bills at 10x Linux. Tests above gate this job; set the IOS_RUNNER repo variable to
+    # e.g. ["self-hosted","macOS","ARM64","ios"] to move iOS builds to your own Mac.
+    runs-on: ${{ fromJSON(vars.IOS_RUNNER || '["macos-latest"]') }}
+    timeout-minutes: 45
     environment: ${{ needs.setup.outputs.environment }}
     steps:
       - uses: actions/checkout@v4
@@ -421,4 +437,4 @@ jobs:
           name: ios-${{ needs.setup.outputs.environment }}-${{ needs.setup.outputs.display_version }}
           path: ./artifacts/ios/*.ipa
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 3
