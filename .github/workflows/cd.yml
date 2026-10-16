@@ -443,6 +443,7 @@ jobs:
           -p:ApplicationVersion=${{ needs.setup.outputs.build_version }}
           -p:RuntimeIdentifier=iossimulator-arm64
           -p:EnableAssemblyILStripping=false
+          -p:MtouchLink=None
           -p:CodesignKey=
 
       # No signing secrets means no IPA is possible, so package the simulator build instead so the
