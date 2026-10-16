@@ -4,8 +4,8 @@ name: CI
 #   - Docs-only changes skip the pipeline entirely (paths-ignore).
 #   - Unit tests and Android run on hosted Linux; a failing test or Android build stops the run
 #     before any macOS minute is spent (iOS `needs` both).
-#   - Pull requests compile one environment on Android and skip iOS; the full environment
-#     matrix and the iOS compile run only after merge to main (or on manual dispatch).
+#   - Pull requests and pushes build ONE environment (UAT). Pick the environment, or "all", when
+#     you run it by hand from the Actions tab, so nobody pays for flavours they did not ask for.
 #   - Runners are overridable with repo variables ANDROID_RUNNER / IOS_RUNNER, a JSON label
 #     list, e.g. IOS_RUNNER=["self-hosted","macOS","ARM64","ios"] to use a self-hosted Mac.
 #   - Every job has a timeout so a hung build cannot burn the monthly allowance.
@@ -18,6 +18,18 @@ on:
     branches: [main]
     paths-ignore: ['**.md', 'docs/**', '.gitignore', 'LICENSE']
   workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to compile
+        required: true
+        type: choice
+        options: [UAT, STAGE, RELEASE, all]
+        default: UAT
+      include_ios:
+        description: Also compile for iOS (uses macOS minutes)
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -75,9 +87,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # PRs only need one environment to prove the code compiles; the environments differ
-        # by constants and config, not by code, so the full matrix runs after merge.
-        environment: ${{ fromJSON(github.event_name == 'pull_request' && '["RELEASE"]' || '["UAT","STAGE","RELEASE"]') }}
+        environment: ${{ fromJSON(github.event_name == 'workflow_dispatch' && (inputs.environment == 'all' && '["UAT","STAGE","RELEASE"]' || format('["{0}"]', inputs.environment)) || '["UAT"]') }}
     steps:
       - uses: actions/checkout@v4
 
@@ -121,19 +131,51 @@ jobs:
           -p:AppEnvironment=${{ matrix.environment }}
           -p:AndroidPackageFormat=apk
 
+      - name: Collect APK
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          bin=CompanyName.AppName.MAUI/bin/Release/net9.0-android
+          apk=$(ls "$bin"/*-Signed.apk 2>/dev/null | head -1 || true)
+          [ -n "$apk" ] || apk=$(ls "$bin"/*.apk | head -1)
+          cp "$apk" "out/MAUI-${{ matrix.environment }}-android.apk"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk-${{ matrix.environment }}
+          path: out/*.apk
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Show artifacts on the run summary
+        if: always()
+        run: |
+          {
+            echo "### Android build (${{ matrix.environment }})"
+            if ls out/* >/dev/null 2>&1; then
+              echo "| File | Size |"
+              echo "| --- | --- |"
+              for f in out/*; do echo "| \`$(basename "$f")\` | $(du -h "$f" | cut -f1) |"; done
+              echo ""
+              echo "Download the APK from **Artifacts** at the bottom of this page (kept 1 day). Signed AAB/APK builds come from the CD workflow."
+            else
+              echo "No installable file was produced."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
   build-ios:
     name: Build iOS (${{ matrix.environment }})
-    # macOS minutes cost 10x: skip on pull requests and only start once tests and the Android
-    # build have passed.
-    if: github.event_name != 'pull_request'
+    # macOS minutes cost 10x: never on pull requests, and by hand only when asked for. Starts
+    # only once tests and the Android build have passed.
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.include_ios)
     runs-on: ${{ fromJSON(vars.IOS_RUNNER || '["macos-latest"]') }}
     timeout-minutes: 30
     needs: [test, build-android]
     strategy:
       fail-fast: false
       matrix:
-        # One compile is enough as a smoke check; per-environment IPAs come from the CD pipeline.
-        environment: [RELEASE]
+        environment: ${{ fromJSON(github.event_name == 'workflow_dispatch' && (inputs.environment == 'all' && '["UAT","STAGE","RELEASE"]' || format('["{0}"]', inputs.environment)) || '["UAT"]') }}
     steps:
       - uses: actions/checkout@v4
 
@@ -149,8 +191,10 @@ jobs:
           key: nuget-ios-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
           restore-keys: nuget-ios-${{ runner.os }}-
 
+      # Pin the workload set to the SDK version (global.json) so a newer iOS SDK that needs a
+      # not-yet-installed Xcode is never pulled in.
       - name: Install MAUI iOS workload
-        run: dotnet workload install maui-ios --skip-sign-check
+        run: dotnet workload install maui-ios --skip-sign-check --version "$(dotnet --version)"
 
       # The iOS SDK pack is tied to one Xcode release (e.g. SDK 26.5 needs Xcode 26.5) and the
       # runner's default Xcode is often newer, which fails with "requires Xcode X". Pick the
@@ -158,8 +202,9 @@ jobs:
       - name: Select Xcode matching the iOS SDK
         run: |
           set -euo pipefail
-          pack=$(ls -d "${DOTNET_ROOT:-$HOME/.dotnet}"/packs/Microsoft.iOS.Sdk.net9.0_* | sort -V | tail -1)
-          want=$(basename "$pack" | sed -E 's/.*_([0-9]+\.[0-9]+)$/\1/')
+          pack=$(ls -d "${DOTNET_ROOT:-$HOME/.dotnet}"/packs/Microsoft.iOS.Sdk.net*_*/*/ | sort -V | tail -1)
+          # The pack's own manifest says which Xcode it requires (its folder name can differ).
+          want=$(/usr/libexec/PlistBuddy -c "Print :RecommendedXcodeVersion" "${pack}Versions.plist")
           echo "iOS SDK pack: $pack (needs Xcode $want)"
           xcode=$(find /Applications -maxdepth 1 -name "Xcode_${want}*.app" -type d ! -iname '*beta*' ! -iname '*RC*' | sort -V | tail -1)
           if [ -z "$xcode" ]; then
@@ -183,3 +228,35 @@ jobs:
           -p:AppEnvironment=${{ matrix.environment }}
           -p:RuntimeIdentifier=iossimulator-arm64
           -p:CodesignKey=
+
+      - name: Package simulator app
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          app=$(find CompanyName.AppName.MAUI/bin/Release/net9.0-ios -maxdepth 3 -name '*.app' -type d | head -1)
+          [ -n "$app" ] || { echo "::error::No .app produced"; exit 1; }
+          ditto -c -k --sequesterRsrc --keepParent "$app" "out/MAUI-${{ matrix.environment }}-ios-simulator.zip"
+
+      - name: Upload simulator build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-${{ matrix.environment }}
+          path: out/*.zip
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Show artifacts on the run summary
+        if: always()
+        run: |
+          {
+            echo "### iOS build (${{ matrix.environment }})"
+            if ls out/* >/dev/null 2>&1; then
+              echo "| File | Size |"
+              echo "| --- | --- |"
+              for f in out/*; do echo "| \`$(basename "$f")\` | $(du -h "$f" | cut -f1) |"; done
+              echo ""
+              echo "This is a simulator build (runs in the iOS Simulator). A signed, installable **IPA** is produced by the CD workflow once the iOS signing secrets are set."
+            else
+              echo "No installable file was produced."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
